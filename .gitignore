@@ -1,0 +1,12 @@
+# Python
+__pycache__/
+*.pyc
+
+# VSC
+.vscode
+
+# Docker
+docker/volumes
+
+# Database
+db.sqlite3

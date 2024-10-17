@@ -1,0 +1,17 @@
+- create venv: pipenv install
+
+- start venv: pipenv shell
+
+- create project: django-admin startproject <project_name>
+
+- create app: python manage.py startapp <app_name>
+
+- start server: python manage.py runserver <port>
+
+- create migration file: python manage.py makemigrations
+
+- execute migrations: python manage.py migrate
+
+- roll back migration: python manage.py migrate <app_name> <migration_code_number>
+
+- display migration sql code: python manage.py sqlmigrate <app_name> <migration_code_number>
