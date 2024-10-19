@@ -2,6 +2,10 @@
 
 - start venv: pipenv shell
 
+- create super user: python manage.py createsuperuser
+
+- change super user password: python manage.py changepassword <user_name>
+
 - create project: django-admin startproject <project_name>
 
 - create app: python manage.py startapp <app_name>
