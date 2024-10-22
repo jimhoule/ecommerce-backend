@@ -32,7 +32,7 @@ class Product(models.Model):
     inventory = models.IntegerField()
     last_update = models.DateTimeField(auto_now=True)
     
-    collection = models.ForeignKey(Collection, on_delete=models.PROTECT)
+    collection = models.ForeignKey(Collection, on_delete=models.PROTECT, related_name='products')
     promotions = models.ManyToManyField(Promotion, blank=True)
 
      # NOTE: Overrides __str__() to change string representation of the class (Used in Admin site)
@@ -89,7 +89,7 @@ class OrderItem(models.Model):
     unit_price = models.DecimalField(max_digits=6, decimal_places=2)
 
     order = models.ForeignKey(Order, on_delete=models.PROTECT)
-    product = models.ForeignKey(Product, on_delete=models.PROTECT)
+    product = models.ForeignKey(Product, on_delete=models.PROTECT, related_name='orderitems')
 
 
 class Address(models.Model):

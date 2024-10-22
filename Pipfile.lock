@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "99a29e9f60e8add5554d6e6e1da15b92fe666ca3be1c514d50cea354018f61cc"
+            "sha256": "3a1a5d1b8536a659ebb3657c3ac532b2f0c5328f55511bb626d53f79f1b8ab33"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -41,6 +41,15 @@
             "index": "pypi",
             "markers": "python_version >= '3.8'",
             "version": "==4.4.6"
+        },
+        "djangorestframework": {
+            "hashes": [
+                "sha256:2b8871b062ba1aefc2de01f773875441a961fefbf79f5eed1e32b2f096944b20",
+                "sha256:36fe88cd2d6c6bec23dca9804bab2ba5517a8bb9d8f47ebc68981b56840107ad"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.8'",
+            "version": "==3.15.2"
         },
         "psycopg": {
             "hashes": [
