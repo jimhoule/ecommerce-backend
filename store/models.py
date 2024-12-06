@@ -76,6 +76,9 @@ class Customer(models.Model):
     # NOTE: Adding ordering to Meta will enable ordering everywhere there is a customer list in the admin site
     class Meta:
         ordering = ['user__first_name', 'user__last_name']
+        permissions = [
+            ('view_history', 'Can view history'),
+        ]
 
 
 class Order(models.Model):
