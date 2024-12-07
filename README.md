@@ -7,7 +7,6 @@ Stack:
   * PostgresQL
 
 Coming soon:
-  * Creating Order API
   * Uploading files
   * Sending emails
   * Background tasks
