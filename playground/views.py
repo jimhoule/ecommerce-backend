@@ -1,10 +1,31 @@
-from django.shortcuts import render
+from django.contrib.contenttypes.models import ContentType
+from django.core.mail import send_mail, mail_admins, BadHeaderError, EmailMessage
 from django.db import transaction, connection
 from django.db.models import Func, Value, F
 from django.db.models.functions import Concat
-from django.contrib.contenttypes.models import ContentType
+from django.shortcuts import render
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from templated_mail.mail import BaseEmailMessage
 from store.models import Product, Order, OrderItem, Customer, Collection
 from tags.models import Tag, TaggedItem
+
+@api_view()
+def send_email(request):
+    try:
+        # mail_admins('subject', 'message', html_message='html message')
+        # send_mail('subject', 'message', 'info@test.com', ['test@test.com'])
+
+        # message = EmailMessage('subject', 'message with file', 'info@test.com', ['test@test.com'])
+        # message.attach_file('playground/static/images/image.jpg')
+        # message.send()
+
+        templated_message = BaseEmailMessage(template_name='emails/message.html', context={ 'name': 'Matthew' })
+        templated_message.send(['test@test.com'])
+    except BadHeaderError:
+        return Response('Bad header error')
+    
+    return Response('Email was sent successfully')
 
 # NOTE: Another to use transactions is to put the decorator to a function
 # @transaction.atomic()

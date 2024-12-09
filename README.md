@@ -7,7 +7,6 @@ Stack:
   * PostgresQL
 
 Coming soon:
-  * Sending emails
   * Background tasks
   * Caching
   * Testing
