@@ -4,14 +4,24 @@ from django.db.models.query import QuerySet
 from django.http import HttpRequest
 from django.urls import reverse
 from django.utils.html import format_html
-from .models import Collection, Product, Customer, Order, OrderItem
+from .models import Collection, Customer, Order, OrderItem, Product, ProductImage
 
 
 # Inlines
-class OrderItemInline(admin.StackedInline):
+class OrderItemInline(admin.TabularInline):
     model = OrderItem
     autocomplete_fields = ['product']
     extra = 0
+
+
+class ProductImageInline(admin.TabularInline):
+    model = ProductImage
+    readonly_fields = ['thumbnail']
+
+    def thumbnail(self, instance):
+        if instance.image.name != '':
+            return format_html(f'<img src="{instance.image.url}" class="thumbnail"/>')
+
 
 # Filters classes
 class InventoryFilter(admin.SimpleListFilter):
@@ -39,7 +49,7 @@ class CollectionAdmin(admin.ModelAdmin):
     @admin.display(ordering='products_count')
     def products_count(self, collection):
         url = f'{reverse('admin:store_product_changelist')}?collection__id={str(collection.id)}'
-        return format_html('<a href="{}">{}</a>', url, collection.products_count)
+        return format_html(f'<a href="{url}">{collection.products_count}</a>')
     
     def get_queryset(self, request: HttpRequest) -> QuerySet:
         return super().get_queryset(request).annotate(
@@ -59,7 +69,11 @@ class ProductAdmin(admin.ModelAdmin):
     ordering = ['title']
     list_filter = ['collection', 'last_update', InventoryFilter]
     actions = ['clear_inventory']
+    inlines = [ProductImageInline]
     list_per_page = 10
+
+    class Media:
+        css = { 'all': ['store/styles.css'] }
 
     def collection_title(self, product):
         return product.collection.title
