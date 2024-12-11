@@ -1,0 +1,3 @@
+Start worker process: celery -A <app_name> worker --loglevel=info -P gevent
+Start beat process(scheduled tasks): celery -A <app_name> beat -P gevent
+Start flower process(monitoring): celery -A <app_name> flower -P gevent (UI can be accessed at localhost:5555)

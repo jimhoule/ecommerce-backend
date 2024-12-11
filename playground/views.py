@@ -9,6 +9,13 @@ from rest_framework.response import Response
 from templated_mail.mail import BaseEmailMessage
 from store.models import Product, Order, OrderItem, Customer, Collection
 from tags.models import Tag, TaggedItem
+from .tasks import notify_customers
+
+
+@api_view()
+def notify(request):
+    notify_customers.delay('email message')
+    return Response('Notifications sent')
 
 @api_view()
 def send_email(request):

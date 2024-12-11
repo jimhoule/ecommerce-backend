@@ -14,6 +14,7 @@ from datetime import timedelta
 from pathlib import Path
 from os import path
 import mimetypes
+from celery.schedules import crontab
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -205,3 +206,14 @@ EMAIL_PORT = 25
 ADMINS = [
     ('Admin', 'admin@test.com'),
 ]
+
+# NOTE: Celery
+CELERY_BROKER_URL = 'redis://localhost:6379/1'
+CELERY_BEAT_SCHEDULE = {
+    'notify_customers': {
+        'task': 'playground.tasks.notify_customers',
+        'args': ['Email message'],
+        # NOTE: Schedules task to be executed every monday at 7:30 am
+        'schedule': crontab(day_of_week=1, hour=7, minute=30),
+    }
+}
