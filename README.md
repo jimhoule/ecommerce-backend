@@ -8,7 +8,6 @@ Stack:
 
 Coming soon:
   * Caching
-  * Testing
 
 Steps:
   * Run "pipenv install" to install dependencies
