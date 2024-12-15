@@ -4,12 +4,22 @@ from django.db import transaction, connection
 from django.db.models import Func, Value, F
 from django.db.models.functions import Concat
 from django.shortcuts import render
+from django.views.decorators.cache import cache_page
+import requests
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from templated_mail.mail import BaseEmailMessage
 from store.models import Product, Order, OrderItem, Customer, Collection
 from tags.models import Tag, TaggedItem
 from .tasks import notify_customers
+
+
+@api_view()
+@cache_page(10 * 60)
+def cache(request):
+    response = requests.get('https://httpbin.org/delay/2')
+    data = response.json()
+    return Response(data)
 
 
 @api_view()

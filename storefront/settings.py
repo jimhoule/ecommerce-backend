@@ -221,3 +221,14 @@ CELERY_BEAT_SCHEDULE = {
         'schedule': crontab(day_of_week=1, hour=7, minute=30),
     }
 }
+
+# NOTE: Cache
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/2",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
