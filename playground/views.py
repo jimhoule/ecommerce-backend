@@ -5,6 +5,7 @@ from django.db.models import Func, Value, F
 from django.db.models.functions import Concat
 from django.shortcuts import render
 from django.views.decorators.cache import cache_page
+from logging import getLogger
 import requests
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -12,6 +13,21 @@ from templated_mail.mail import BaseEmailMessage
 from store.models import Product, Order, OrderItem, Customer, Collection
 from tags.models import Tag, TaggedItem
 from .tasks import notify_customers
+
+
+logger = getLogger(__name__)
+
+
+@api_view()
+def logging(request):
+    try:
+        logger.info('Calling httpbin')
+        response = requests.get('https://httpbin.org/delay/2')
+        logger.info('Received httpbin response')
+        data = response.json()
+        return Response(data)
+    except:
+        logger.critical('httpbin is offline')
 
 
 @api_view()

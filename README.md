@@ -13,9 +13,9 @@ Description:
   * Unit testing with Pytest
   * Performance testing with Locust
   * Profiling with Silk
-
-Coming soon:
-  * Caching
+  * Caching with Redis
+  * Logging
+  * Dev and prod settings
 
 Steps to run:
   * Run "pipenv install" to install dependencies

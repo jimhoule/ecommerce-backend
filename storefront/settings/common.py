@@ -12,24 +12,18 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from datetime import timedelta
 from pathlib import Path
-from os import path
+from os import environ, path
 import mimetypes
 from celery.schedules import crontab
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-qfw-t8pkc+=uoiil_r@!g!p!xc7fvc+ps0u$*yk#d)tpm*t8(0'
-
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -58,6 +52,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -69,14 +64,14 @@ MIDDLEWARE = [
 if DEBUG:
     MIDDLEWARE += ['silk.middleware.SilkyMiddleware']
 
-# NOTE: Used for Debug Toolbar
+# Debug Toolbar
 INTERNAL_IPS = [
     # ...
     '127.0.0.1',
     # ...
 ]
 
-# NOTE: Cors settings
+# Cors settings
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5001',
 ]
@@ -106,26 +101,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'storefront.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        # SQLite
-        # 'ENGINE': 'django.db.backends.sqlite3',
-        # 'NAME': BASE_DIR / 'db.sqlite3',
-
-        # Postgres
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'storefront', 
-        'USER': 'postgres',
-        'PASSWORD': 'password',
-        'HOST': 'localhost', 
-        'PORT': 5435,
-    }
-}
 
 
 # Password validation
@@ -165,6 +140,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = path.join(BASE_DIR, 'static')
 
 # For user uploaded files
 MEDIA_URL = '/media/'
@@ -197,10 +173,10 @@ DJOSER = {
     },
 }
 
-# NOTE: User model used in the whole app
+# User model used in the whole app
 AUTH_USER_MODEL = 'core.User'
 
-# NOTE: Email backend
+# Email backend
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'localhost'
 EMAIL_HOST_USER = ''
@@ -211,7 +187,7 @@ ADMINS = [
     ('Admin', 'admin@test.com'),
 ]
 
-# NOTE: Celery
+# Celery
 CELERY_BROKER_URL = 'redis://localhost:6379/1'
 CELERY_BEAT_SCHEDULE = {
     'notify_customers': {
@@ -222,7 +198,7 @@ CELERY_BEAT_SCHEDULE = {
     }
 }
 
-# NOTE: Cache
+# Cache
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
@@ -231,4 +207,35 @@ CACHES = {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
     }
+}
+
+# Logging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+        'file': {
+            'class': 'logging.FileHandler',
+            'filename': 'general.log',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        # NOTE: Catches all errors from all apps
+        '': {
+            'handlers': ['console', 'file'],
+            'level': environ.get('DJANGO_LOG_LEVEL', 'INFO')
+        },
+    },
+    'formatters': {
+        'verbose': {
+            'format': '{asctime} ({levelname}) - {name} - {message}',
+            # NOTE: Uses str.format() as style
+            'style': '{',
+        },
+    },
 }

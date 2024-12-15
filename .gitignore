@@ -12,5 +12,9 @@ docker/volumes
 # Database
 db.sqlite3
 
-# Media
+# Files
 media/
+static/
+
+# Logs
+*.log

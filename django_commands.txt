@@ -19,3 +19,5 @@
 - roll back migration: python manage.py migrate <app_name> <migration_code_number>
 
 - display migration sql code: python manage.py sqlmigrate <app_name> <migration_code_number>
+
+- collect all static files from all apps of project: python manage.py collectstatic
