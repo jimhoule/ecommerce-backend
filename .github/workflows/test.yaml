@@ -22,7 +22,10 @@ jobs:
           python-version: '3.13'
       - name: Install dependencies
         # NOTE: We use the --system flag so packages are installed into the system python and not into a virtualenv
-        run: pipenv install --system --dev
+        run: |
+          pip install --upgrade pip 
+          pip install pipenv
+          pipenv install --system --dev
       - name: Verify linter
         uses: astral-sh/ruff-action@v3
       - name: Run tests     
