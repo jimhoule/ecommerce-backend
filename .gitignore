@@ -7,8 +7,8 @@ __pycache__/
 .vscode
 
 # Files
-media/
-static/
+/media
+/static
 
 # Logs
 *.log
