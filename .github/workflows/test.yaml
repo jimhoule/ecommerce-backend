@@ -1,0 +1,29 @@
+name: Test
+
+on:
+  push:
+    branches: [dev, main]
+  pull_request:
+    branches: [dev, main]
+    types:
+      - opened
+      - reopened
+      - synchronize
+
+jobs:
+  Test:
+    runs-on: ubuntu-latest
+    container: node:18
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install dependencies
+        run: pip install --system --dev
+      - name: Verify linter
+        uses: astral-sh/ruff-action@v3
+      - name: Run tests     
+        run: pytest
