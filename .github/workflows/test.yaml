@@ -13,6 +13,21 @@ on:
 jobs:
   Test:
     runs-on: ubuntu-latest
+    container: python:3.13
+    services:
+      postgres:
+        image: postgres
+        expose: 5432
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: storefront
+        # NOTE: Sets health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
