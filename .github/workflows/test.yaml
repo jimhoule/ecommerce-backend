@@ -13,9 +13,10 @@ on:
 jobs:
   Test:
     runs-on: ubuntu-latest
+    container: python:3.13.1-slim-bullseye
     services:
       postgres:
-        image: postgres
+        image: postgres:14.2
         ports:
           - 5432:5432
         env:
