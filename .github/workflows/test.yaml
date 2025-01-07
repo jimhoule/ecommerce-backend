@@ -32,12 +32,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      # - name: Setup python
-      #   uses: actions/setup-python@v5
-      #   with:
-      #     python-version: '3.13'
       - name: Install dependencies
-        # NOTE: We use the --system flag so packages are installed into the system python and not into a virtualenv
+        # NOTE: We use the --system flag so packages are installed into the system python and not into a virtualenv. Containers don't need a virtualenv
         run: |
           pip install --upgrade pip 
           pip install pipenv
