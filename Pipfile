@@ -32,6 +32,7 @@ model-bakery = "*"
 locust = "*"
 django-silk = "*"
 colorama = "*"
+ruff = "*"
 
 [requires]
 python_version = "3.13"

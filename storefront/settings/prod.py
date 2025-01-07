@@ -1,18 +1,18 @@
 from os import environ
-from .common import *
 
+from .common import *
 
 DEBUG = False
 
 SECRET_KEY = environ.get('DJANGO_SECRET_KEY')
 
 ALLOWED_HOSTS = [
-    '',
+	'',
 ]
 
 # CORS
 CORS_ALLOWED_ORIGINS = [
-    '',
+	'',
 ]
 
 # EMAIL
@@ -22,7 +22,7 @@ EMAIL_HOST_PASSWORD = environ.get('EMAIL_PASSWORD')
 EMAIL_PORT = environ.get('EMAIL_PORT')
 
 ADMINS = [
-    ('Admin', environ.get('EMAIL_ADMIN_SENDER')),
+	('Admin', environ.get('EMAIL_ADMIN_SENDER')),
 ]
 
 # DB

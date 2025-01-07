@@ -1,122 +1,125 @@
-from django.contrib.contenttypes.models import ContentType
-from django.core.mail import send_mail, mail_admins, BadHeaderError, EmailMessage
-from django.db import transaction, connection
-from django.db.models import Func, Value, F
-from django.db.models.functions import Concat
+from logging import getLogger
+
+import requests
+from django.core.mail import BadHeaderError
 from django.shortcuts import render
 from django.views.decorators.cache import cache_page
-from logging import getLogger
-import requests
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from templated_mail.mail import BaseEmailMessage
-from store.models import Product, Order, OrderItem, Customer, Collection
-from tags.models import Tag, TaggedItem
-from .tasks import notify_customers
 
+from store.models import OrderItem, Product
+
+from .tasks import notify_customers
 
 logger = getLogger(__name__)
 
 
 @api_view()
 def logging(request):
-    try:
-        logger.info('Calling httpbin')
-        response = requests.get('https://httpbin.org/delay/2')
-        logger.info('Received httpbin response')
-        data = response.json()
-        return Response(data)
-    except:
-        logger.critical('httpbin is offline')
+	try:
+		logger.info('Calling httpbin')
+		response = requests.get('https://httpbin.org/delay/2')
+		logger.info('Received httpbin response')
+		data = response.json()
+		return Response(data)
+	except Exception:
+		logger.critical('httpbin is offline')
 
 
 @api_view()
 @cache_page(10 * 60)
 def cache(request):
-    response = requests.get('https://httpbin.org/delay/2')
-    data = response.json()
-    return Response(data)
+	response = requests.get('https://httpbin.org/delay/2')
+	data = response.json()
+	return Response(data)
 
 
 @api_view()
 def notify(request):
-    notify_customers.delay('email message')
-    return Response('Notifications sent')
+	notify_customers.delay('email message')
+	return Response('Notifications sent')
+
 
 @api_view()
 def send_email(request):
-    try:
-        # mail_admins('subject', 'message', html_message='html message')
-        # send_mail('subject', 'message', 'info@test.com', ['test@test.com'])
+	try:
+		# mail_admins('subject', 'message', html_message='html message')
+		# send_mail('subject', 'message', 'info@test.com', ['test@test.com'])
 
-        # message = EmailMessage('subject', 'message with file', 'info@test.com', ['test@test.com'])
-        # message.attach_file('playground/static/images/image.jpg')
-        # message.send()
+		# message = EmailMessage('subject', 'message with file', 'info@test.com', ['test@test.com'])
+		# message.attach_file('playground/static/images/image.jpg')
+		# message.send()
 
-        templated_message = BaseEmailMessage(template_name='emails/message.html', context={ 'name': 'Matthew' })
-        templated_message.send(['test@test.com'])
-    except BadHeaderError:
-        return Response('Bad header error')
-    
-    return Response('Email was sent successfully')
+		templated_message = BaseEmailMessage(
+			template_name='emails/message.html', context={'name': 'Matthew'}
+		)
+		templated_message.send(['test@test.com'])
+	except BadHeaderError:
+		return Response('Bad header error')
+
+	return Response('Email was sent successfully')
+
 
 # NOTE: Another to use transactions is to put the decorator to a function
 # @transaction.atomic()
 def say_hello(request):
-    # NOTE: Creates an object
-    # collection = Collection()
-    # collection.title = 'Collection example'
-    # collection.featured_product = Product(pk=1)
-    # collection.save()
+	# NOTE: Creates an object
+	# collection = Collection()
+	# collection.title = 'Collection example'
+	# collection.featured_product = Product(pk=1)
+	# collection.save()
 
-    # NOTE: Updates an object
-    # collection = Collection.objects.get(pk=1)
-    # collection.featured_product = None
-    # collection.save()
+	# NOTE: Updates an object
+	# collection = Collection.objects.get(pk=1)
+	# collection.featured_product = None
+	# collection.save()
 
-    # NOTE: Deletes one object
-    # Collection.objects.get(pk=1).delete()
+	# NOTE: Deletes one object
+	# Collection.objects.get(pk=1).delete()
 
-    # NOTE: Uses transactions
-    # with transaction.atomic():
-    #     order = Order()
-    #     order.customer = Customer(pk=1)
-    #     order.save()
+	# NOTE: Uses transactions
+	# with transaction.atomic():
+	#     order = Order()
+	#     order.customer = Customer(pk=1)
+	#     order.save()
 
-    #     order_item = OrderItem()
-    #     order_item.order = order
-    #     order_item.product = Product(pk=1)
-    #     order_item.quantity = 1
-    #     order_item.unit_price = 10.00
-    #     order_item.save()
+	#     order_item = OrderItem()
+	#     order_item.order = order
+	#     order_item.product = Product(pk=1)
+	#     order_item.quantity = 1
+	#     order_item.unit_price = 10.00
+	#     order_item.save()
 
-    # NOTE: Deletes mutiple objects
-    # Collection.objects.filter(id__lt=5).delete()
+	# NOTE: Deletes mutiple objects
+	# Collection.objects.filter(id__lt=5).delete()
 
-    # NOTE: Deletes all objects
-    # Collection.delete()
+	# NOTE: Deletes all objects
+	# Collection.delete()
 
-    # NOTE: Uses raw SQL query on model
-    # query_set = Product.objects.raw('SELECT * FROM store_product')
+	# NOTE: Uses raw SQL query on model
+	# query_set = Product.objects.raw('SELECT * FROM store_product')
 
-    # NOTE: Uses raw SQL query on database connection
-    # with connection.cursor() as cursor:
-    #     cursor.execute('SELECT * FROM store_product')
+	# NOTE: Uses raw SQL query on database connection
+	# with connection.cursor() as cursor:
+	#     cursor.execute('SELECT * FROM store_product')
 
-    # NOTE: Queries a Generic model using a custom Manager
-    # query_set = TaggedItem.objects.get_tags_for(Product, 1)
+	# NOTE: Queries a Generic model using a custom Manager
+	# query_set = TaggedItem.objects.get_tags_for(Product, 1)
 
-    # NOTE: Gets 5 most recent Orders with their Order Items and Customer (orderitem_set is a relation name generated by django)
-    # query_set = Order.objects.select_related('customer').prefetch_related('orderitem_set').order_by('-placed_at')[:5]
+	# NOTE: Gets 5 most recent Orders with their Order Items and Customer (orderitem_set is a relation name generated by django)
+	# query_set = Order.objects.select_related('customer').prefetch_related('orderitem_set').order_by('-placed_at')[:5]
 
-    # NOTE: Customer full_name concatenation
-    # query_set = Customer.objects.annotate(
-    #     Concat('first_name', Value(' '), 'last_name'),
-    # )
+	# NOTE: Customer full_name concatenation
+	# query_set = Customer.objects.annotate(
+	#     Concat('first_name', Value(' '), 'last_name'),
+	# )
 
-    # NOTE: Gets already ordered Products
-    query_set = Product.objects.filter(
-        id__in=OrderItem.objects.values('product__id').distinct()
-    ).order_by('title')
+	# NOTE: Gets already ordered Products
+	query_set = Product.objects.filter(
+		id__in=OrderItem.objects.values('product__id').distinct()
+	).order_by('title')
 
-    return render(request, 'hello.html', {'name': 'Charles', 'products': list(query_set)})
+	return render(
+		request, 'hello.html', {'name': 'Charles', 'products': list(query_set)}
+	)

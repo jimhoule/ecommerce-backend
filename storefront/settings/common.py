@@ -11,8 +11,9 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from datetime import timedelta
+from os import path
 from pathlib import Path
-from os import  path
+
 from celery.schedules import crontab
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -26,53 +27,53 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.sessions',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'django_filters',
-    'corsheaders',
-    'rest_framework',
-    'djoser',
-    'silk',
-    'playground',
-    'debug_toolbar',
-    'store',
-    'tags',
-    'likes',
-    'core',
+	'django.contrib.admin',
+	'django.contrib.sessions',
+	'django.contrib.auth',
+	'django.contrib.contenttypes',
+	'django.contrib.messages',
+	'django.contrib.staticfiles',
+	'django_filters',
+	'corsheaders',
+	'rest_framework',
+	'djoser',
+	'silk',
+	'playground',
+	'debug_toolbar',
+	'store',
+	'tags',
+	'likes',
+	'core',
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+	'corsheaders.middleware.CorsMiddleware',
+	'django.middleware.security.SecurityMiddleware',
+	'whitenoise.middleware.WhiteNoiseMiddleware',
+	'django.contrib.sessions.middleware.SessionMiddleware',
+	'django.middleware.common.CommonMiddleware',
+	'django.middleware.csrf.CsrfViewMiddleware',
+	'django.contrib.auth.middleware.AuthenticationMiddleware',
+	'django.contrib.messages.middleware.MessageMiddleware',
+	'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 ROOT_URLCONF = 'storefront.urls'
 
 TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    },
+	{
+		'BACKEND': 'django.template.backends.django.DjangoTemplates',
+		'DIRS': [],
+		'APP_DIRS': True,
+		'OPTIONS': {
+			'context_processors': [
+				'django.template.context_processors.debug',
+				'django.template.context_processors.request',
+				'django.contrib.auth.context_processors.auth',
+				'django.contrib.messages.context_processors.messages',
+			],
+		},
+	},
 ]
 
 WSGI_APPLICATION = 'storefront.wsgi.application'
@@ -82,18 +83,18 @@ WSGI_APPLICATION = 'storefront.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+	{
+		'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+	},
+	{
+		'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+	},
+	{
+		'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+	},
+	{
+		'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+	},
 ]
 
 
@@ -128,24 +129,21 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # DJANGO REST FRAMEWORK
 REST_FRAMEWORK = {
-    'COERCE_DECIMAL_TO_STRING': False,
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
+	'COERCE_DECIMAL_TO_STRING': False,
+	'DEFAULT_AUTHENTICATION_CLASSES': (
+		'rest_framework_simplejwt.authentication.JWTAuthentication',
+	),
 }
 
 
-SIMPLE_JWT = {
-   'AUTH_HEADER_TYPES': ('JWT'),
-   'ACCESS_TOKEN_LIFETIME': timedelta(days=1)
-}
+SIMPLE_JWT = {'AUTH_HEADER_TYPES': ('JWT'), 'ACCESS_TOKEN_LIFETIME': timedelta(days=1)}
 
 
 DJOSER = {
-    'SERIALIZERS': {
-        'user_create': 'core.serializers.UserCreateSerializer',
-        'current_user': 'core.serializers.UserSerializer',
-    },
+	'SERIALIZERS': {
+		'user_create': 'core.serializers.UserCreateSerializer',
+		'current_user': 'core.serializers.UserSerializer',
+	},
 }
 
 # APP USER MODEL
@@ -156,57 +154,57 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # CELERY
 CELERY_BEAT_SCHEDULE = {
-    'notify_customers': {
-        'task': 'playground.tasks.notify_customers',
-        'args': ['Email message'],
-        # NOTE: Schedules task to be executed every monday at 7:30 am
-        'schedule': crontab(day_of_week=1, hour=7, minute=30),
-    }
+	'notify_customers': {
+		'task': 'playground.tasks.notify_customers',
+		'args': ['Email message'],
+		# NOTE: Schedules task to be executed every monday at 7:30 am
+		'schedule': crontab(day_of_week=1, hour=7, minute=30),
+	}
 }
 
 # DB
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-    }
+	'default': {
+		'ENGINE': 'django.db.backends.postgresql',
+	}
 }
 
 # CACHE
 CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
-    }
+	'default': {
+		'BACKEND': 'django_redis.cache.RedisCache',
+		'OPTIONS': {
+			'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+		},
+	}
 }
 
 # LOGGING
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-            'formatter': 'verbose',
-        },
-        'file': {
-            'class': 'logging.FileHandler',
-            'filename': 'general.log',
-            'formatter': 'verbose',
-        },
-    },
-    'loggers': {
-        # NOTE: Catches all errors from all apps
-        '': {
-            'handlers': ['console', 'file'],
-        },
-    },
-    'formatters': {
-        'verbose': {
-            'format': '{asctime} ({levelname}) - {name} - {message}',
-            # NOTE: Uses str.format() as style
-            'style': '{',
-        },
-    },
+	'version': 1,
+	'disable_existing_loggers': False,
+	'handlers': {
+		'console': {
+			'class': 'logging.StreamHandler',
+			'formatter': 'verbose',
+		},
+		'file': {
+			'class': 'logging.FileHandler',
+			'filename': 'general.log',
+			'formatter': 'verbose',
+		},
+	},
+	'loggers': {
+		# NOTE: Catches all errors from all apps
+		'': {
+			'handlers': ['console', 'file'],
+		},
+	},
+	'formatters': {
+		'verbose': {
+			'format': '{asctime} ({levelname}) - {name} - {message}',
+			# NOTE: Uses str.format() as style
+			'style': '{',
+		},
+	},
 }

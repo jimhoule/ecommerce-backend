@@ -1,4 +1,5 @@
 from os import environ
+
 from celery import Celery
 
 environ.setdefault('DJANGO_SETTINGS_MODULE', 'storefront.settings.dev')

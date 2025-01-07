@@ -20,3 +20,6 @@ __pycache__/
 celerybeat-schedule
 celerybeat-schedule-shm
 celerybeat-schedule-wal
+
+# Linter
+.ruff_cache
