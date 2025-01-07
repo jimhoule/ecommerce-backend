@@ -33,6 +33,7 @@ locust = "*"
 django-silk = "*"
 colorama = "*"
 ruff = "*"
+pre-commit = "*"
 
 [requires]
 python_version = "3.13"
