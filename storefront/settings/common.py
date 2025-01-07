@@ -12,8 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from datetime import timedelta
 from pathlib import Path
-from os import environ, path
-import mimetypes
+from os import  path
 from celery.schedules import crontab
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -22,8 +21,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
-
-DEBUG = True
 
 
 # Application definition
@@ -50,7 +47,6 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -60,27 +56,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
-if DEBUG:
-    MIDDLEWARE += ['silk.middleware.SilkyMiddleware']
-
-# Debug Toolbar
-INTERNAL_IPS = [
-    # ...
-    '127.0.0.1',
-    # ...
-]
-
-# Cors settings
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:5001',
-]
-
-# NOTE: Solves a display bug in Django Toolbar
-mimetypes.add_type("application/javascript", ".js", True)
-DEBUG_TOOLBAR_CONFIG = {
-    'INTERCEPT_REDIRECTS': False,
-}
 
 ROOT_URLCONF = 'storefront.urls'
 
@@ -151,7 +126,7 @@ MEDIA_ROOT = path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Django Rest Framwork configs
+# DJANGO REST FRAMEWORK
 REST_FRAMEWORK = {
     'COERCE_DECIMAL_TO_STRING': False,
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -173,22 +148,13 @@ DJOSER = {
     },
 }
 
-# User model used in the whole app
+# APP USER MODEL
 AUTH_USER_MODEL = 'core.User'
 
-# Email backend
+# EMAIL
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'localhost'
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
-EMAIL_PORT = 25
 
-ADMINS = [
-    ('Admin', 'admin@test.com'),
-]
-
-# Celery
-CELERY_BROKER_URL = 'redis://localhost:6379/1'
+# CELERY
 CELERY_BEAT_SCHEDULE = {
     'notify_customers': {
         'task': 'playground.tasks.notify_customers',
@@ -198,18 +164,24 @@ CELERY_BEAT_SCHEDULE = {
     }
 }
 
-# Cache
+# DB
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+    }
+}
+
+# CACHE
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/2",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
     }
 }
 
-# Logging
+# LOGGING
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -228,7 +200,6 @@ LOGGING = {
         # NOTE: Catches all errors from all apps
         '': {
             'handlers': ['console', 'file'],
-            'level': environ.get('DJANGO_LOG_LEVEL', 'INFO')
         },
     },
     'formatters': {

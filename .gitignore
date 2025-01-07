@@ -6,15 +6,17 @@ __pycache__/
 # VSC
 .vscode
 
-# Docker
-docker/volumes
-
-# Database
-db.sqlite3
-
 # Files
 media/
 static/
 
 # Logs
 *.log
+
+# Env
+.env
+
+# Background Tasks
+celerybeat-schedule
+celerybeat-schedule-shm
+celerybeat-schedule-wal

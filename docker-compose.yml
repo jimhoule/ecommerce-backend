@@ -1,0 +1,139 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:14.2
+    ports:
+      - 5435:5432
+    restart: always
+    deploy:
+      mode: replicated
+      replicas: 1
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: storefront
+    volumes:
+      - postgres:/var/lib/postgresql/data/
+
+  pgadmin:
+    depends_on:
+      - postgres
+    image: dpage/pgadmin4:latest
+    restart: always
+    deploy:
+      mode: replicated
+      replicas: 1
+    ports:
+      - 5051:5051
+    environment:
+      PGADMIN_DEFAULT_EMAIL: local@local.com
+      PGADMIN_DEFAULT_PASSWORD: password
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+
+  redis:
+    image: redis:latest
+    restart: always
+    deploy:
+      mode: replicated
+      replicas: 1
+    ports:
+      - '6379:6379'
+    volumes: 
+      - redis:/data
+
+  smtp4dev:
+    image: rnwood/smtp4dev:latest
+    restart: always
+    deploy:
+      mode: replicated
+      replicas: 1
+    ports:
+      # Web interface port
+      - '8000:80'
+      # SMTP server port
+      - '25:25'
+      # IMAP port
+      - '143:143'
+    volumes:
+      - smtp4dev:/smtp4dev
+
+  app:
+    depends_on:
+      - postgres
+      - redis
+    build:
+      context: ./
+      dockerfile: ./app.dockerfile
+    command: ./docker-entrypoint.sh
+    restart: always
+    deploy:
+      mode: replicated
+      replicas: 1
+    ports:
+      - 5000:5000
+    volumes:
+      - .:/app
+  
+  celery:
+    depends_on:
+      - redis
+    build:
+      context: ./
+      dockerfile: ./app.dockerfile
+    command: celery -A storefront worker --loglevel=info
+    deploy:
+      mode: replicated
+      replicas: 1
+    volumes:
+      - .:/app
+
+  celery_beat:
+    depends_on:
+      - redis
+    build:
+      context: ./
+      dockerfile: ./app.dockerfile
+    command: celery -A storefront beat --loglevel=info
+    deploy:
+      mode: replicated
+      replicas: 1
+    volumes:
+      - .:/app
+
+  flower:
+    depends_on:
+      - app
+      - redis
+      - celery
+    build:
+      context: ./
+      dockerfile: ./app.dockerfile
+    command: celery -A storefront flower
+    deploy:
+      mode: replicated
+      replicas: 1
+    ports:
+      - 5555:5555
+
+  tests:
+    depends_on:
+      - redis
+      - postgres
+    build:
+      context: ./
+      dockerfile: ./app.dockerfile
+    command: pytest
+    deploy:
+      mode: replicated
+      replicas: 1
+    tty: true
+    volumes:
+      - .:/app
+
+volumes:
+  postgres:
+  pgadmin:
+  redis:
+  smtp4dev:
