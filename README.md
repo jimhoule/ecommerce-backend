@@ -14,6 +14,8 @@ Stack:
   * Pytest
   * Locust
   * Silk
+  * Ruff
+  * Pre-commit
 
 Description:
   * Image uploding 
@@ -25,7 +27,9 @@ Description:
   * Caching with Redis
   * Logging
   * Dev and prod settings
+  * Linting and formatting with Ruff
+  * Commit hooks with Pre-commit
+  * Github actions
 
 Steps to run:
-  * Run "pipenv install" to install dependencies
   * Run "docker-compose up -d" file to start containers

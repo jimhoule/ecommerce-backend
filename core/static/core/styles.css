@@ -6,13 +6,13 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #1ec8aa;
+  background-color: #5477e1;
   height: 100vh;
   width: 100vw;
 }
 
 .logo {
-  width: 300px;
+  width: 1200px;
 }
 
 .thumbnail {
